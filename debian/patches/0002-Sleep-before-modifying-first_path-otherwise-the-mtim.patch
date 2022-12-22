@@ -1,0 +1,68 @@
+From: =?utf-8?q?Pierre-Elliott_B=C3=A9cue?= <peb@debian.org>
+Date: Sat, 20 Jul 2019 20:34:15 +0200
+Subject: Sleep before modifying first_path otherwise the mtime isn't updated
+
+It seems that the mtime handling by python acts weirdly.
+
+First, as this snippet shows, the mtime is lower than the initial time
+although the file got modified after.
+
+"""
+import os
+import time
+
+def test_mtime():
+    _s = time.time()
+    with open("/tmp/test", "w") as testfile:
+        testfile.write("")
+    _t = os.path.getmtime("/tmp/test")
+    print(repr(_s))
+    print(repr(_t))
+
+In [4]: test_mtime()
+1563311822.154947
+1563311822.153427
+"""
+
+Second, as this snippet shows, it doesn't update in each and every
+condition.
+
+"""
+In [35]: def test_mtime():
+    ...:     with open("/tmp/test_mtime", "w") as myfile:
+    ...:         myfile.write("")
+    ...:     print(repr(os.path.getmtime("/tmp/test_mtime")))
+    ...:     time.sleep(1)
+    ...:     with open("/tmp/test_mtime", "a") as myfile:
+    ...:         myfile.write("")
+    ...:     os.sync()
+    ...:     time.sleep(1)
+    ...:     print(repr(os.path.getmtime("/tmp/test_mtime")))
+    ...:
+
+In [36]: test_mtime()
+1563349885.8835335
+1563349885.8835335
+"""
+
+Sleeping right before the file modification in the test seems enough,
+but it's a messy solution. The bug has been reported upstream, and
+upstream should consider relying definitely on pyinotify instead of
+trying to do something with a custom class.
+---
+ tests/test_watcher.py | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/tests/test_watcher.py b/tests/test_watcher.py
+index a91029f..3f48b13 100644
+--- a/tests/test_watcher.py
++++ b/tests/test_watcher.py
+@@ -144,6 +144,8 @@ class TestWatcher(unittest.TestCase):
+         assert watcher.examine() == (second_path, None)
+         assert watcher.examine() == (None, None)
+ 
++        # Without a sufficient wait, the mtime isn't updated...
++        time.sleep(1)
+         with open(first_path, 'a') as f:
+             f.write('foo')
+         assert watcher.examine() == (first_path, None)

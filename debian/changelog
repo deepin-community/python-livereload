@@ -1,0 +1,150 @@
+python-livereload (2.6.3-2) unstable; urgency=medium
+
+  * Wrap-and-sort
+  * Use pytest to run the package's tests. (Closes: #970495)
+
+ -- Pierre-Elliott Bécue <peb@debian.org>  Sat, 07 Nov 2020 14:02:34 +0100
+
+python-livereload (2.6.3-1) unstable; urgency=medium
+
+  * New upstream release 2.6.3
+  * d/control:
+    - Demote node-less from Recommends to Suggests
+      Closes: #962869
+    - Bump Standards-Version to 4.5.0
+    - Bump debhelper-compat level to 13
+
+ -- Pierre-Elliott Bécue <peb@debian.org>  Fri, 04 Sep 2020 22:23:01 +0200
+
+python-livereload (2.6.1-3) unstable; urgency=medium
+
+  * Drop Python2 package (Closes: #943960, #937895)
+  * d/control:
+    - Use debhelper-compat instead of debian/compat (and bump to 12)
+    - Bump Standards-Version to 4.4.1
+    - Add Rules-Requires-Root: no field
+  * d/gitlab-ci.yml refreshed
+
+ -- Pierre-Elliott Bécue <peb@debian.org>  Sun, 03 Nov 2019 22:59:58 +0100
+
+python-livereload (2.6.1-2) unstable; urgency=medium
+
+  * d/p/0002: Sorry attempt to fix a failing test. See the patch notes to get
+    a clearer intel. Also see
+    https://github.com/lepture/python-livereload/issues/200
+
+ -- Pierre-Elliott Bécue <peb@debian.org>  Sat, 20 Jul 2019 20:36:14 +0200
+
+python-livereload (2.6.1-1) unstable; urgency=medium
+
+  * New upstream release 2.6.1
+    - Dropped support for python 2.6, 3.3 and 3.4
+  * d/control:
+    - Bumped Standards-Version to 4.4.0. No change required.
+
+ -- Pierre-Elliott Bécue <peb@debian.org>  Sun, 14 Jul 2019 16:02:39 +0200
+
+python-livereload (2.6.0-1) unstable; urgency=medium
+
+  [ Ondřej Nový ]
+  * Use 'python3 -m sphinx' instead of sphinx-build for building docs
+  * Drop python-sphinx from B-D and build only with Python 3 version of
+    sphinx to allow removing of Python 2.7 in future
+
+  [ Pierre-Elliott Bécue ]
+  * New upstream release: 2.6.0
+  * d/control:
+    - Replace my Crans address by my Debian's one
+    - Bump Standards-Version to 4.2.1.
+    - Add specific elements to both python{,3}-livereload long description
+
+ -- Pierre-Elliott Bécue <peb@debian.org>  Sun, 09 Dec 2018 21:40:16 +0100
+
+python-livereload (2.5.2-1) unstable; urgency=medium
+
+  [ Pierre-Elliott Bécue ]
+  * New upstream version 2.5.2
+  * wrap-and-sort
+  * d/control:
+    - Add python{,3}-pkg-resources as a dependency of both python and python3
+      package. (Closes: #896315, #896399)
+    - Raise dh dependency level to 11
+    - Bump Standards-Version to 4.1.4
+    - Change erroneous suggestion in python3-livereload from python-slimmer to
+      python3-slimmer
+    - Vcs urls set to salsa
+    - Add the basic python testsuite
+    - Drop the obsolete X-Python{,3} entries
+    - Add django in suggestion of both python{,3} packages
+  * d/compat: Raised level to 11
+  * d/python-livereload-doc.doc-base:
+    - Updated file paths according to dh
+      compat.
+    - Fixed typo: everytime => every time
+  * d/copyright:
+    - Updated Format: url to use HTTPS link
+    - Add myself
+  * d/watch:
+    - Use version 4 and use uscan's tags
+  * d/s/lintian-overrides:
+    - livereload.js has a weird first line but is not minified
+  * d/rules:
+    - Replace dpkg-parsechangelog call with the use of DEB_VERSION_UPSTREAM
+    - Add a wrap-and-sort rule as a reminder of the way it's to be used.
+    - Remove the get-orig-source target.
+  * d/patches:
+    - Add patch 0001 to fix two privacy breaches in the documentation of the
+      livereload library.
+    - Add patch 0002 to fix a failing test
+  * d/tests/control:
+    - Set up the upstream tests in autopkgtest
+
+  [ Agustin Henze ]
+  * Add gci
+  * Add Pierri-Elliott as uploader
+
+ -- Pierre-Elliott Bécue <becue@crans.org>  Wed, 16 May 2018 10:26:11 +0200
+
+python-livereload (2.5.1-1) unstable; urgency=medium
+
+  * New upstream version 2.5.1
+
+ -- Antonio Terceiro <terceiro@debian.org>  Sun, 26 Nov 2017 13:33:59 -0200
+
+python-livereload (2.4.0-1) unstable; urgency=medium
+
+  * Imported Upstream version 2.4.0
+  * Add missing build-dependency on dh-python
+  * New debian/livereload binary to use help2man
+
+ -- Agustin Henze <tin@debian.org>  Fri, 21 Aug 2015 19:35:55 +0200
+
+python-livereload (2.2.2-1) unstable; urgency=medium
+
+  * Imported Upstream version 2.2.2
+  * Bumped Standard-Version to 3.9.6 (no changes required)
+
+ -- Agustin Henze <tin@debian.org>  Mon, 20 Oct 2014 20:32:27 -0300
+
+python-livereload (2.2.1-1) unstable; urgency=medium
+
+  * Imported Upstream version 2.2.1
+  * Add python3-livereload binary package
+
+ -- Agustin Henze <tin@debian.org>  Sat, 30 Aug 2014 15:46:28 -0700
+
+python-livereload (2.2.0-1) unstable; urgency=medium
+
+  * Imported Upstream version 2.2.0 (Closes: #750720)
+  * Improve package description (Closes: #724900). Thanks to Justin B Rye!
+  * Bumped Standard-Version to 3.9.5 (no changes required)
+  * Fix override_dh_auto_install target in debian/rules
+  * Remove bdepends on docopt
+
+ -- Agustin Henze <tin@debian.org>  Fri, 13 Jun 2014 21:08:20 -0300
+
+python-livereload (1.0.1-1) unstable; urgency=low
+
+  * Initial release. (Closes: #723571)
+
+ -- Agustin Henze <tin@debian.org>  Tue, 17 Sep 2013 10:53:36 -0300

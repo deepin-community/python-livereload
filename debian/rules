@@ -1,0 +1,35 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+include /usr/share/dpkg/pkg-info.mk
+
+export PYBUILD_NAME=livereload
+
+%:
+	dh $@ --with python3,sphinxdoc --buildsystem=pybuild
+
+override_dh_auto_clean:
+	dh_auto_clean --all
+	rm -rf docs/_build
+	rm -f debian/livereload.1
+
+override_dh_auto_build:
+	python3 -m sphinx -C -b html -Dmaster_doc=index -d docs/_build/.doctrees -N docs docs/_build/html
+	dh_auto_build
+
+override_dh_auto_test:
+
+override_dh_installman:
+	help2man -N \
+		--version-string=$(DEB_VERSION_UPSTREAM) \
+		-o debian/livereload.1 \
+		-n "Automatic browser refresher" \
+		debian/livereload
+	dh_installman
+
+wrap-and-sort:
+	@if [ ! -d "debian" ] ; then \
+		echo 'Run this from the top directory of the Debian source' >&2; \
+		exit 1; \
+	fi
+	wrap-and-sort -st

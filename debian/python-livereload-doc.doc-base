@@ -1,0 +1,13 @@
+Document: python3-livereload
+Title: LiveReload Server in Python Version Referenc Manual
+Author: Hsiaoming Yang
+Abstract: LiveReload Server in Python Version
+ Web Developers need to refresh a browser every time when he saved a file (css,
+ javascript, html), it is really boring. LiveReload will take care of that for
+ you. When you saved a file, your browser will refresh itself. And what's more,
+ it can do some tasks like compiling less to css before the browser refreshing.
+Section: Programming/Python
+
+Format: HTML
+Index: /usr/share/doc/python3-livereload/html/index.html
+Files: /usr/share/doc/python3-livereload/html/*

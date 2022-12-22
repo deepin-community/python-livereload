@@ -1,0 +1,10 @@
+#!/usr/bin/python3
+import sys
+import os
+sys.path.insert(0, os.environ['PWD'])
+from pkg_resources import load_entry_point
+
+if __name__ == '__main__':
+    sys.exit(
+        load_entry_point('livereload', 'console_scripts', 'livereload')()
+    )

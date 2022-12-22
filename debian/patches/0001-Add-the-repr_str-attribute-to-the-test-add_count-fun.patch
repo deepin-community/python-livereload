@@ -1,0 +1,31 @@
+From: =?utf-8?q?Pierre-Elliott_B=C3=A9cue?= <becue@crans.org>
+Date: Wed, 16 May 2018 10:20:38 +0200
+Subject: Add the repr_str attribute to the test add_count function
+
+Without, the following traceback happen
+======================================================================
+ERROR: test_watch_file (tests.test_watcher.TestWatcher)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/autopkgtest.2Pi2SP/build.cBN/python-livereload-2.5.2/tests/test_watcher.py", line 66, in test_watch_file
+    rv = watcher.examine()
+  File "/tmp/autopkgtest.2Pi2SP/build.cBN/python-livereload-2.5.2/livereload/watcher.py", line 92, in examine
+    func.repr_str, delay))
+AttributeError: 'function' object has no attribute 'repr_str'
+---
+ tests/test_watcher.py | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/tests/test_watcher.py b/tests/test_watcher.py
+index 07ee21c..a91029f 100644
+--- a/tests/test_watcher.py
++++ b/tests/test_watcher.py
+@@ -62,6 +62,8 @@ class TestWatcher(unittest.TestCase):
+         def add_count():
+             watcher.count += 1
+ 
++        add_count.repr_str = "add_count"
++
+         watcher.watch(filepath, add_count)
+         assert watcher.is_changed(filepath)
+         assert watcher.is_changed(filepath) is False
