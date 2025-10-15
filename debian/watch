@@ -1,2 +1,2 @@
 version=4
-https://github.com/lepture/@PACKAGE@/tags .*archive\/v?([0-9.]*).tar.gz
+https://github.com/lepture/@PACKAGE@/tags .*\/v?([0-9.]*).tar.gz

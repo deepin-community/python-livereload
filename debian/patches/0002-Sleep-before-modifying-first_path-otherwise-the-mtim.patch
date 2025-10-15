@@ -53,11 +53,9 @@ trying to do something with a custom class.
  tests/test_watcher.py | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/tests/test_watcher.py b/tests/test_watcher.py
-index a91029f..3f48b13 100644
 --- a/tests/test_watcher.py
 +++ b/tests/test_watcher.py
-@@ -144,6 +144,8 @@ class TestWatcher(unittest.TestCase):
+@@ -144,6 +144,8 @@
          assert watcher.examine() == (second_path, None)
          assert watcher.examine() == (None, None)
  

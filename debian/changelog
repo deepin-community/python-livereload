@@ -1,3 +1,29 @@
+python-livereload (2.7.1-0.1) unstable; urgency=medium
+
+  * Non-Maintainer Upload
+  * New upstream version 2.7.1
+  * Remove usage of deprecated python3-pkg-resources (Closes: #1083656)
+
+ -- Alexandre Detiste <tchet@debian.org>  Sat, 18 Jan 2025 16:07:12 +0100
+
+python-livereload (2.7.0-0.1) unstable; urgency=medium
+
+  + Non-Maintainer Upload
+  * Fix d/watch
+  * New upstream version 2.7.0 (Closes: #1073477)
+  * Use new dh-sequence-python3
+  * Add build-dependency on:
+    - furo
+    - python3-myst-parser
+    - python3-sphinxcontrib.programoutput
+
+  [ Debian Janitor ]
+  * Update lintian override info to new format on line 2-3.
+  * Set upstream metadata fields: Bug-Database, Bug-Submit, Repository-Browse.
+  * Update standards version to 4.6.1, no changes needed.
+
+ -- Alexandre Detiste <tchet@debian.org>  Tue, 01 Oct 2024 07:56:19 +0200
+
 python-livereload (2.6.3-2) unstable; urgency=medium
 
   * Wrap-and-sort
