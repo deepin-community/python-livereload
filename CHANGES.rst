@@ -3,6 +3,21 @@ Changelog
 
 The full list of changes between each Python LiveReload release.
 
+Version 2.7.1
+-------------
+
+Released on Dec 18, 2024
+
+1. Wait for the IOLoop to be stopped before attempting to close it
+2. Not injecting live script when serving non-HTML content
+
+Version 2.7.0
+-------------
+
+Released on Jun 23, 2024
+
+1. Fixed many bugs
+
 Version 2.6.3
 -------------
 
@@ -222,7 +237,7 @@ Release on May 6th, 2012
 
 + bugfix for compiler alias
 + raise error for CommandCompiler
-+ add comand-line feature
++ add command-line feature
 + get static file from internet
 
 Version 0.2

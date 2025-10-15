@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
     livereload.server
     ~~~~~~~~~~~~~~~~~
@@ -27,14 +26,10 @@ from tornado.log import LogFormatter
 from .handlers import LiveReloadHandler, LiveReloadJSHandler
 from .handlers import ForceReloadHandler, StaticFileHandler
 from .watcher import get_watcher_class
-from six import string_types, PY3
 
 import sys
 
-if sys.version_info >= (3, 7) or sys.version_info.major == 2:
-    import errno
-else:
-    from os import errno
+import errno
 
 if sys.version_info >= (3, 8) and sys.platform == 'win32':
     import asyncio
@@ -90,12 +85,12 @@ def shell(cmd, output=None, mode='w', cwd=None, shell=False):
                 logger.error("maybe you haven't installed %s", cmd[0])
             return e
         stdout, stderr = p.communicate()
+        #: stdout is bytes, decode for python3
+        stdout = stdout.decode()
+        stderr = stderr.decode()
         if stderr:
             logger.error(stderr)
             return stderr
-        #: stdout is bytes, decode for python3
-        if PY3:
-            stdout = stdout.decode()
         with open(output, mode) as f:
             f.write(stdout)
 
@@ -104,11 +99,12 @@ def shell(cmd, output=None, mode='w', cwd=None, shell=False):
 
 class LiveScriptInjector(web.OutputTransform):
     def __init__(self, request):
-        super(LiveScriptInjector, self).__init__(request)
+        super().__init__(request)
 
     def transform_first_chunk(self, status_code, headers, chunk, finishing):
-        if HEAD_END in chunk:
-            chunk = chunk.replace(HEAD_END, self.script + HEAD_END)
+        is_html = "html" in headers.get("Content-Type", "")
+        if is_html and HEAD_END in chunk:
+            chunk = chunk.replace(HEAD_END, self.script + HEAD_END, 1)
             if 'Content-Length' in headers:
                 length = int(headers['Content-Length']) + len(self.script)
                 headers['Content-Length'] = str(length)
@@ -130,7 +126,7 @@ class LiveScriptContainer(WSGIContainer):
             return response.append
 
         app_response = self.wsgi_app(
-            WSGIContainer.environ(request), start_response)
+            WSGIContainer(self.wsgi_app).environ(request), start_response)
         try:
             response.extend(app_response)
             body = b"".join(response)
@@ -143,7 +139,7 @@ class LiveScriptContainer(WSGIContainer):
         status_code, reason = data["status"].split(' ', 1)
         status_code = int(status_code)
         headers = data["headers"]
-        header_set = set(k.lower() for (k, v) in headers)
+        header_set = {k.lower() for (k, v) in headers}
         body = escape.utf8(body)
 
         if HEAD_END in body:
@@ -174,7 +170,7 @@ class LiveScriptContainer(WSGIContainer):
         self._log(status_code, request)
 
 
-class Server(object):
+class Server:
     """Livereload server interface.
 
     Initialize a server and watch file changes::
@@ -182,7 +178,7 @@ class Server(object):
         server = Server(wsgi_app)
         server.serve()
 
-    :param app: a wsgi application instance
+    :param app: a WSGI application instance
     :param watcher: A Watcher instance, you don't have to initialize
                     it by yourself. Under Linux, you will want to install
                     pyinotify and use INotifyWatcher() to avoid wasted
@@ -202,7 +198,7 @@ class Server(object):
         """Add or override HTTP headers at the at the beginning of the 
            request.
 
-        Once you have intialized a server, you can add one or more 
+        Once you have initialized a server, you can add one or more 
         headers before starting the server::
 
             server.setHeader('Access-Control-Allow-Origin', '*')
@@ -219,7 +215,7 @@ class Server(object):
     def watch(self, filepath, func=None, delay=None, ignore=None):
         """Add the given filepath for watcher list.
 
-        Once you have intialized a server, watch file changes before
+        Once you have initialized a server, watch file changes before
         serve the server::
 
             server.watch('static/*.stylus', 'make static')
@@ -239,10 +235,10 @@ class Server(object):
         :param ignore: A function return True to ignore a certain pattern of
                        filepath.
         """
-        if isinstance(func, string_types):
+        if isinstance(func, str):
             cmd = func
             func = shell(func)
-            func.name = "shell: {}".format(cmd)
+            func.name = f"shell: {cmd}"
 
         self.watcher.watch(filepath, func, delay, ignore=ignore)
 
@@ -332,7 +328,7 @@ class Server(object):
             self.root = root
 
         self._setup_logging()
-        logger.info('Serving on http://%s:%s' % (host, port))
+        logger.info(f'Serving on http://{host}:{port}')
 
         self.default_filename = default_filename
 
@@ -346,14 +342,18 @@ class Server(object):
 
             def opener():
                 time.sleep(open_url_delay)
-                webbrowser.open('http://%s:%s' % (host, port))
+                webbrowser.open(f'http://{host}:{port}')
             threading.Thread(target=opener).start()
 
         try:
             self.watcher._changes.append(('__livereload__', restart_delay))
             LiveReloadHandler.start_tasks()
-            add_reload_hook(lambda: IOLoop.instance().close(all_fds=True))
+            # When autoreload is triggered, initiate a shutdown of the IOLoop
+            add_reload_hook(lambda: IOLoop.instance().stop())
+            # The call to start() does not return until the IOLoop is stopped.
             IOLoop.instance().start()
+            # Once the IOLoop is stopped, the IOLoop can be closed to free resources
+            IOLoop.current().close(all_fds=True)
         except KeyboardInterrupt:
             logger.info('Shutting down...')
 

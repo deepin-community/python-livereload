@@ -6,7 +6,7 @@ include /usr/share/dpkg/pkg-info.mk
 export PYBUILD_NAME=livereload
 
 %:
-	dh $@ --with python3,sphinxdoc --buildsystem=pybuild
+	dh $@ --with sphinxdoc --buildsystem=pybuild
 
 override_dh_auto_clean:
 	dh_auto_clean --all
@@ -14,7 +14,8 @@ override_dh_auto_clean:
 	rm -f debian/livereload.1
 
 override_dh_auto_build:
-	python3 -m sphinx -C -b html -Dmaster_doc=index -d docs/_build/.doctrees -N docs docs/_build/html
+#	python3 -m sphinx -C -b html -Dmaster_doc=index -d docs/_build/.doctrees -N docs docs/_build/html
+	sphinx-build -N docs docs/_build/html
 	dh_auto_build
 
 override_dh_auto_test:

@@ -4,13 +4,16 @@ Priority: optional
 Maintainer: Agustin Henze <tin@debian.org>
 Uploaders: Pierre-Elliott Bécue <peb@debian.org>
 Build-Depends: debhelper-compat (= 13),
-               dh-python,
+               dh-sequence-python3,
+               furo <!nodoc>,
                help2man,
                python3-all,
+               python3-myst-parser <!nodoc>,
                python3-setuptools,
-               python3-sphinx,
+               python3-sphinx <!nodoc>,
+               python3-sphinxcontrib.programoutput <!nodoc>,
                python3-tornado
-Standards-Version: 4.5.0
+Standards-Version: 4.6.1
 Rules-Requires-Root: no
 Homepage: https://github.com/lepture/python-livereload
 Vcs-Git: https://salsa.debian.org/debian/python-livereload.git
@@ -21,6 +24,7 @@ Architecture: all
 Section: doc
 Depends: ${misc:Depends}, ${sphinxdoc:Depends}
 Recommends: python3-livereload
+Multi-Arch: foreign
 Description: automatic browser refresher (documentation)
  It is really boring for Web developers to need to refresh their browser
  every time they save a (CSS, JavaScript, or HTML) file. LiveReload will
@@ -32,8 +36,7 @@ Description: automatic browser refresher (documentation)
 
 Package: python3-livereload
 Architecture: all
-Depends: python3-pkg-resources,
-         python3-tornado,
+Depends: python3-tornado,
          ${misc:Depends},
          ${python3:Depends}
 Recommends: python3-pyinotify
